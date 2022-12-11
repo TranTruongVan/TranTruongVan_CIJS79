@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  input {
+    @apply rounded-md pl-2 py-1 bg-slate-200 mr-2 flex-1
+  }
+  button{
+    @apply py-1 px-3 rounded-md bg-blue-600 text-white text-center cursor-pointer hover:opacity-50
+  }
+}
+
