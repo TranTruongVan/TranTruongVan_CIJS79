@@ -19,7 +19,7 @@ export default function App() {
       name: "Daniel",
       number: "(816)-403-5456"
     },
-    
+
   ])
 
 
@@ -38,27 +38,23 @@ export default function App() {
   }
 
 
-  function sortContactsByName(contacts) {
-    let newContacts = [...contacts]
-    for (let i = 0; i < newContacts.length - 1; i++) {
-      for (let j = i; j < newContacts.length; ++j) {
-        if (newContacts[i].name > newContacts[j].name) {
-          [newContacts[i], newContacts[j]] = [newContacts[j], newContacts[i]];
-        }
-      }
-    }
-    return newContacts;
-  }
-
-
   function handleAddContact() {
-    setContacts(sortContactsByName([
+    function compareName(a, b) {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    }
+    setContacts([
       ...contacts,
       {
         name: inputValues.name,
         number: inputValues.number
       }
-    ]))
+    ].sort(compareName))
     setInputValues({
       ...inputValues,
       name: "",
