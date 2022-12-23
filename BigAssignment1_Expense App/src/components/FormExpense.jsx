@@ -1,38 +1,12 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { AppContext } from '../contexts/AppProvider';
 
-export default function Header() {
-
-  const [isAdding, setIsAdding] = useState("false")
-
-  return (
-    <div className="w-[500px] md:w-[800px] py-6 px-8 bg-purple-primary rounded-md mx-auto max-w-[90%] flex justify-center items-center mt-8">
-      {
-        isAdding === "true"
-          ? <FormExpense setIsAdding={setIsAdding} />
-          : <div className="btn bg-purple-secondary text-white min-w-[220px]"
-            onClick={() => { setIsAdding("true") }}>
-            ADD NEW EXPENSE
-          </div>
-      }
-    </div>
-  )
-}
-
-function FormExpense(props) {
+export default function FormExpense(props) {
   const { inputValues: { name, amount, date } } = useContext(AppContext);
-
-
-  function handleSubmit(type) {
-    console.log(type);
-    props.setIsAdding("false")
-    if (type === "add")
-      console.log("bjfdbjsfdbfd");
-  }
-
-
   return (
-    <form onSubmit={e => { e.preventDefault() }} className="flex flex-col w-full">
+    <form
+      onSubmit={e => { e.preventDefault() }}
+      className="flex flex-col w-full">
       <Input
         placeholder="Enter name here..."
         type="text"
@@ -48,20 +22,17 @@ function FormExpense(props) {
         value={date}
         name="Date" />
       <div className="flex justify-end items-center mt-4">
-        <div
-          className="btn bg-purple-secondary text-white mr-4"
-          onClick={() => handleSubmit("add")}>
-          ADD
-        </div>
+        {props.children}
         <div
           className="btn bg-slate-300 text-gray-600"
-          onClick={() => handleSubmit("cancel")}>
+          onClick={() => props.onSubmit("cancel")}>
           CANCEL
         </div>
       </div >
     </form>
   )
 }
+
 
 function Input(props) {
   const { setInputValues } = useContext(AppContext);
@@ -77,7 +48,7 @@ function Input(props) {
 
   return (
     <label className="flex justify-between items-center my-2">
-      <div className="text-white font-bold w-[50px]">{props.name}</div>
+      <div className="text-white font-bold w-28">{props.name}</div>
       <input
         onChange={handleChange}
         value={props.value}

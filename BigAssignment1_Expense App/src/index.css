@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #323232;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply py-2 px-4 rounded-md hover:opacity-50 cursor-pointer select-none font-bold text-center shadow-lg
+  }
+
+  .btn-purple {
+    @apply bg-[#862796] border border-white rounded-md text-white
+  }
+}
