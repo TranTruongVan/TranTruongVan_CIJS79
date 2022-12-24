@@ -96,13 +96,14 @@ export default function AppProvider({ children }) {
   }]);
 
 
+  //side effect update chart every time expenses or year change
   useEffect(() => {
     let amountEveryMonths = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     expenses.forEach(expense => {
-      const yearExpense = expense.date.split("-")[0];
+      const yearExpense = expense.date.split("-")[0]; //date have format "yyyy-MM-dd"
       if (yearExpense === year) {
-        const amount = Number(expense.amount.split(" ")[1]);
-        const month = expense.date.split("-")[1];
+        const amount = Number(expense.amount.split(" ")[1]); //amount have format: "$ 50"
+        const month = Number(expense.date.split("-")[1]); //date have format "yyyy-MM-dd"
         amountEveryMonths[month - 1] += amount
       }
     })
