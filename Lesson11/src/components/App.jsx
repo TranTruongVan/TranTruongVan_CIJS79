@@ -8,16 +8,11 @@ export default function App() {
   const [searchText, setSearchText] = useState("");
 
 
-  useEffect(() => { }, [])
-
-
-  function searchFilmAPI(name) {
-    return `https://api.themoviedb.org/3/search/movie?api_key=4311550313481f2eaad962246fe67c57&query=${name}`
-  }
-
-
   function handleSearchFilm(e) {
     e.preventDefault();
+    function searchFilmAPI(name) {
+      return `https://api.themoviedb.org/3/search/movie?api_key=4311550313481f2eaad962246fe67c57&query=${name}`
+    }
     async function getFilms() {
       await axios
         .get(searchFilmAPI(searchText))
@@ -61,7 +56,7 @@ function FilmItem(props) {
 
   return (
     <div className="rounded-lg w-full shadow-lg mb-4 flex overflow-hidden h-40">
-      <img className="w-28 h-40" src={`https://image.tmdb.org/t/p/w500${poster_path}`} alt="" />
+      <img className="w-28 h-40" src={`https://image.tmdb.org/t/p/w500${poster_path}`} alt="film's poster" />
       <div className="flex-1 p-4 flex flex-col">
         <div className="font-bold text-lg">{title}</div>
         <div className="text-gray-400 mb-4">{changeFormatDate(release_date)}</div>
