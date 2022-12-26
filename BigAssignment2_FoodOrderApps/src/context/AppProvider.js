@@ -35,6 +35,12 @@ export default function AppProvider({ children }) {
       "price": 18.99,
       "image": "https://food.fnr.sndimg.com/content/dam/images/food/fullset/2015/7/21/1/HE_Green-Smoothie-Bowl.jpg.rend.hgtvcom.616.462.suffix/1437508213013.jpeg"
     },])
+  const [orderFormInputs, setOrderFormInputs] = useState({
+    yourName: "",
+    street: "",
+    postalCode: "",
+    city: ""
+  })
 
 
   useEffect(() => {
@@ -42,8 +48,10 @@ export default function AppProvider({ children }) {
   }, [])
 
 
-  function addMeal(mealId) {
+  function changeCountMeal(mealId, count) {
     setCart((prev) => {
+      let updatedCart;
+      let gap;
       let mealAmount;
       meals.forEach((meal) => {
         if (meal.id === mealId) {
@@ -51,13 +59,30 @@ export default function AppProvider({ children }) {
 
         }
       })
-      const updatedCart = {
-        countMeals: {
-          ...prev?.countMeals,
-          [mealId]: prev?.countMeals[mealId] ? prev?.countMeals[mealId] + 1 : 1
-        },
-        totalMeals: prev?.totalMeals ? prev?.totalMeals + 1 : 1,
-        totalAmount: prev?.totalAmount ? prev?.totalAmount + mealAmount : mealAmount
+      if (prev && JSON.stringify(prev) !== "{}") {
+        if (prev.countMeals[mealId]) {
+          gap = count - prev.countMeals[mealId];
+        } else {
+          gap = count;
+        }
+        updatedCart = {
+          countMeals: {
+            ...prev.countMeals,
+            [mealId]: count
+          },
+          totalMeals: prev.totalMeals + gap,
+          totalAmount: prev.totalAmount + gap * mealAmount
+        }
+      }
+      else { //first cart
+        gap = count;
+        updatedCart = {
+          countMeals: {
+            [mealId]: count
+          },
+          totalMeals: gap,
+          totalAmount: gap * mealAmount
+        }
       }
       localStorage.setItem("cart", JSON.stringify(updatedCart));
       return updatedCart;
@@ -68,8 +93,11 @@ export default function AppProvider({ children }) {
   return (
     <AppContext.Provider value={{
       cart,
+      setCart,
       meals,
-      addMeal
+      changeCountMeal,
+      orderFormInputs,
+      setOrderFormInputs
     }}>
       {children}
     </AppContext.Provider>

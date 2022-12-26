@@ -41,28 +41,39 @@ function MealsContainer() {
 
 function MealItem(props) {
   const { id, name, description, price, image } = props.data
-  const { addMeal, cart, updateCountMeal } = useContext(AppContext);
-  const [count, setCount] = useState(0);
+  const { cart, changeCountMeal } = useContext(AppContext);
+  const [count, setCount] = useState("");
 
 
   useEffect(() => {
-    if (cart) {
-      setCount(cart?.countMeals[id])
+    if (cart && JSON.stringify(cart) !== "{}") {
+      if (cart.countMeals[id]) {
+        setCount(cart.countMeals[id])
+      }
+    }
+    else {
+      setCount(0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cart])
 
 
   function handleChange(e) {
-    const value = e.target.value;
-    setCount(value);
-    updateCountMeal(Number(value), id);
+    //check only number
+    if (e.target.value === "") {
+      changeCountMeal(id, 0);
+      setCount(0);
+      return;
+    }
+    if (Number.isNaN(Number(e.target.value))) {
+      return;
+    }
+    changeCountMeal(id, Number(e.target.value));
   }
 
 
   function handleAdd() {
-    setCount((prev) => prev + 1);
-    addMeal(id);
+    changeCountMeal(id, count === "" ? 1 : Number(count) + 1);
   }
 
 
@@ -79,8 +90,9 @@ function MealItem(props) {
           <div className="mr-2 font-bold">Amount:</div>
           <input
             className="w-12 rounded-md border border-black text-center px-1"
-            type="number"
+            type="text"
             onChange={handleChange}
+            placeholder="0"
             value={count}
           />
         </div>
