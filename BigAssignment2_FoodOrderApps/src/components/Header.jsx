@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { AppContext } from '../context/AppProvider';
+import { AppContext } from '../contexts/AppProvider';
 import CartModal from './CartModal';
 
 export default function Header() {

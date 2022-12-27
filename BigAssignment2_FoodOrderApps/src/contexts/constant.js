@@ -1,0 +1,1 @@
+export const URL_BASE = "https://63a860b8f4962215b580d5b0.mockapi.io/chenmeals"

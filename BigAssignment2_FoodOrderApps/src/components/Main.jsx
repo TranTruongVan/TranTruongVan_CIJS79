@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { AppContext } from '../context/AppProvider'
+import { AppContext } from '../contexts/AppProvider'
 
 export default function Main() {
   return (
@@ -31,7 +31,7 @@ function MealsContainer() {
   const { meals } = useContext(AppContext);
   return (
     <div className="mt-40 text-center max-w-5xl bg-white rounded-xl mx-auto py-3 px-6">
-      {meals.map(meal => {
+      {meals?.map(meal => {
         return <MealItem key={meal.id} data={meal} />
       })}
     </div>
@@ -50,9 +50,9 @@ function MealItem(props) {
       if (cart.countMeals[id]) {
         setCount(cart.countMeals[id])
       }
-    }
-    else {
-      setCount(0);
+      else {
+        setCount(0);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cart])

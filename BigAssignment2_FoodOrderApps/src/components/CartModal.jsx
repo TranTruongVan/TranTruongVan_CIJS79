@@ -1,17 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { AppContext } from '../context/AppProvider';
+import { AppContext } from '../contexts/AppProvider';
 
 export default function CartModal(props) {
-  const { meals, cart, setCart } = useContext(AppContext);
+  const { meals, cart, setCart, sendOrder, orderFormInputs, setOrderFormInputs } = useContext(AppContext);
   const [mealsInCart, setMealsInCart] = useState();
   const [totalAmount, setTotalAmount] = useState();
   const [isDisplayOrderForm, setIsDisplayOrderForm] = useState(false);
-  const [orderFormInputs, setOrderFormInputs] = useState({
-    yourName: "",
-    street: "",
-    postalCode: "",
-    city: ""
-  })
   const [error, setError] = useState({
     yourName: false,
     street: false,
@@ -39,13 +33,17 @@ export default function CartModal(props) {
         })
         return result;
       })
-      setTotalAmount(cart.totalAmount);
+      setTotalAmount(() => {
+        const a = cart.totalAmount;
+        console.log(a);
+        return a > 1 ? a : 0;
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cart])
 
 
-  function handleConfirm() {
+  async function handleConfirm() {
     let flag = false;
     let error = {
       yourName: false,
@@ -72,17 +70,14 @@ export default function CartModal(props) {
     setError(error);
 
     if (flag) return;
-    sendOrder();
-  }
 
-
-  async function sendOrder() {
     setSendingOrderStatus("pending");
-    setTimeout(() => {
+
+    await sendOrder().then(res => {
       setSendingOrderStatus("successfully");
       localStorage.removeItem("cart");
       setCart({});
-    }, 3000);
+    })
   }
 
 
@@ -119,7 +114,7 @@ export default function CartModal(props) {
               onClick={() => { props.setIsDisplayCartModal(false) }}>
               Close
             </div>
-            {(totalAmount && (totalAmount.toFixed(2) !== 0)) &&
+            {(totalAmount !== 0) &&
               <div
                 className="py-1 px-6 rounded-2xl cursor-pointer border-2 border-brown-primary text-white bg-brown-primary ml-4 hover:opacity-70"
                 onClick={() => { setIsDisplayOrderForm(true) }}>
@@ -132,21 +127,25 @@ export default function CartModal(props) {
           <div>
             <Input
               isError={error.yourName}
+              setError={setError}
               name="Your Name"
               value={orderFormInputs.yourName}
               setOrderFormInputs={setOrderFormInputs} />
             <Input
               isError={error.street}
+              setError={setError}
               name="Street"
               value={orderFormInputs.street}
               setOrderFormInputs={setOrderFormInputs} />
             <Input
               isError={error.postalCode}
+              setError={setError}
               name="Postal Code"
               value={orderFormInputs.postalCode}
               setOrderFormInputs={setOrderFormInputs} />
             <Input
               isError={error.city}
+              setError={setError}
               name="City"
               value={orderFormInputs.city}
               setOrderFormInputs={setOrderFormInputs} />
@@ -209,11 +208,11 @@ function Input(props) {
   useEffect(() => {
     if (isError)
       setErrorMessage(`Please enter a valid ${name.toLowerCase()}`)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError])
 
 
   function handleChange(e) {
-    setErrorMessage("");
     const value = e.target.value;
     const nameToKey = {
       "Your Name": "yourName",
@@ -221,6 +220,13 @@ function Input(props) {
       "Postal Code": "postalCode",
       "City": "city"
     }
+    setErrorMessage("");
+    props.setError((prev) => {
+      return {
+        ...prev,
+        [nameToKey[name]]: false
+      }
+    })
     props.setOrderFormInputs(prev => {
       return {
         ...prev,
