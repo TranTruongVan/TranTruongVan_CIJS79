@@ -1,6 +1,13 @@
-import { Routes, Route, Outlet, useParams, useNavigate } from 'react-router-dom'
-import React from 'react'
-import PrivateRoute from '../utils/PrivateRoute'
+import {
+  Routes,
+  Route,
+  Outlet,
+  useParams,
+  useNavigate,
+  Link,
+} from 'react-router-dom';
+import React from 'react';
+import PrivateRoute from '../utils/PrivateRoute';
 
 export default function App() {
   return (
@@ -21,49 +28,56 @@ export default function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/about" element={<About />} />
-        </Route >
+        </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
-  )
+  );
 }
-
 
 function Auth() {
   return (
     <div>
-      Auth
+      <div className="text-center text-5xl">Auth Page</div>
+      <div className="flex items-center justify-center my-4">
+        <div className="mr-2 text-3xl">Navigate:</div>
+        <Link to="/auth/login" className="mr-2">
+          <button className="btn">Login</button>
+        </Link>
+        <Link to="/auth/register">
+          <button className="btn">Register</button>
+        </Link>
+      </div>
       <Outlet />
     </div>
-  )
+  );
 }
-
 
 function Login() {
   const navigate = useNavigate();
   return (
-    <div>
+    <div className="text-center">
       Username:
       <input className=" m-4 border border-black" type="text" />
       Password:
       <input className=" m-4 border border-black" type="password" />
       <button
-        className="rounded-md py-2 px-4 bg-blue-400 hover:opacity-50"
+        className="btn"
         onClick={() => {
-          localStorage.setItem("token", "abc123");
-          navigate("/")
-        }}>
+          localStorage.setItem('token', 'abc123');
+          navigate('/');
+        }}
+      >
         Login
       </button>
-    </div >
-  )
+    </div>
+  );
 }
-
 
 function Register() {
   const navigate = useNavigate();
   return (
-    <div>
+    <div className="text-center">
       Username:
       <input className=" m-4 border border-black" type="text" />
       Password:
@@ -71,24 +85,21 @@ function Register() {
       Confirm Password:
       <input className=" m-4 border border-black" type="password" />
       <button
-        className="rounded-md py-2 px-4 bg-blue-400 hover:opacity-50"
+        className="btn"
         onClick={() => {
-          localStorage.setItem("token", "abc123");
-          navigate("/")
-        }}>
+          localStorage.setItem('token', 'abc123');
+          navigate('/');
+        }}
+      >
         Register
       </button>
     </div>
-  )
+  );
 }
-
 
 function HomePage() {
-  return (
-    <div>HomePage</div>
-  )
+  return <div>HomePage</div>;
 }
-
 
 function Product() {
   return (
@@ -96,19 +107,13 @@ function Product() {
       Products
       <Outlet />
     </div>
-  )
+  );
 }
-
 
 function ProductDetail() {
   const params = useParams();
-  return (
-    <div>
-      Product {params.productId}
-    </div>
-  )
+  return <div>Product {params.productId}</div>;
 }
-
 
 function Invoices() {
   return (
@@ -116,43 +121,33 @@ function Invoices() {
       Invoices
       <Outlet />
     </div>
-  )
+  );
 }
-
 
 function InvoiceDetail() {
   const params = useParams();
-  return (
-    <div>
-      Invoice {params.invoiceId}
-    </div>
-  )
+  return <div>Invoice {params.invoiceId}</div>;
 }
-
 
 function Cart() {
-  return (
-    <div>Cart</div>
-  )
+  return <div>Cart</div>;
 }
-
 
 function Profile() {
-  return (
-    <div>Profile</div>
-  )
+  return <div>Profile</div>;
 }
-
 
 function About() {
-  return (
-    <div>About</div>
-  )
+  return <div>About</div>;
 }
-
 
 function NotFound() {
   return (
-    <div>Not Found 404</div>
-  )
+    <div>
+      <p className="my-2">Not Found 404</p>
+      <Link to="/">
+        <button className="btn mr-2">Back To HomePage</button>
+      </Link>
+    </div>
+  );
 }

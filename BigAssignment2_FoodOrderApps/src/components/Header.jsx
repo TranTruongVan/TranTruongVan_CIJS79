@@ -9,7 +9,7 @@ export default function Header() {
   const [totalMeals, setTotalMeals] = useState(0);
 
   useEffect(() => {
-    if (cart && JSON.stringify(cart) !== "{}") {
+    if (cart?.totalMeals) {
       setTotalMeals(cart.totalMeals)
     }
     else {

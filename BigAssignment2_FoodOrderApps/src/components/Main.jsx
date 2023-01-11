@@ -54,6 +54,9 @@ function MealItem(props) {
         setCount(0);
       }
     }
+    else {
+      setCount(0);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cart])
 

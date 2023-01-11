@@ -1,8 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { AppContext } from '../contexts/AppProvider';
+import React, { useContext, useEffect, useState } from "react";
+import { AppContext } from "../contexts/AppProvider";
 
 export default function CartModal(props) {
-  const { meals, cart, setCart, sendOrder, orderFormInputs, setOrderFormInputs } = useContext(AppContext);
+  const {
+    meals,
+    cart,
+    setCart,
+    sendOrder,
+    orderFormInputs,
+    setOrderFormInputs,
+  } = useContext(AppContext);
   const [mealsInCart, setMealsInCart] = useState();
   const [totalAmount, setTotalAmount] = useState();
   const [isDisplayOrderForm, setIsDisplayOrderForm] = useState(false);
@@ -10,29 +17,30 @@ export default function CartModal(props) {
     yourName: false,
     street: false,
     postalCode: false,
-    city: false
-  })
+    city: false,
+  });
   const [sendingOrderStatus, setSendingOrderStatus] = useState("not yet");
-
 
   useEffect(() => {
     if (cart) {
       setMealsInCart(() => {
         let result = [];
         const countMeals = cart.countMeals;
-        if (!countMeals) { return }
-        meals.forEach(meal => {
+        if (!countMeals) {
+          return;
+        }
+        meals.forEach((meal) => {
           if (countMeals[meal.id]) {
             result.push({
               id: meal.id,
               name: meal.name,
               price: meal.price,
-              count: countMeals[meal.id]
-            })
+              count: countMeals[meal.id],
+            });
           }
-        })
+        });
         return result;
-      })
+      });
       setTotalAmount(() => {
         const a = cart.totalAmount;
         console.log(a);
@@ -40,8 +48,7 @@ export default function CartModal(props) {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cart])
-
+  }, [cart]);
 
   async function handleConfirm() {
     let flag = false;
@@ -49,8 +56,8 @@ export default function CartModal(props) {
       yourName: false,
       street: false,
       postalCode: false,
-      city: false
-    }
+      city: false,
+    };
     if (orderFormInputs.yourName === "") {
       flag = true;
       error.yourName = true;
@@ -73,192 +80,214 @@ export default function CartModal(props) {
 
     setSendingOrderStatus("pending");
 
-    await sendOrder().then(res => {
+    await sendOrder().then((res) => {
       setSendingOrderStatus("successfully");
       localStorage.removeItem("cart");
       setCart({});
-    })
+    });
   }
-
 
   return (
     <div className="w-[500px] max-h-[550px] p-4 rounded-xl bg-white text-black mt-32 mx-auto overflow-auto">
-      {sendingOrderStatus === "pending" &&
+      {sendingOrderStatus === "pending" && (
         <div className="text-xl font-bold text-black">Sending or data...</div>
-      }
-      {sendingOrderStatus === "successfully" &&
+      )}
+
+      {sendingOrderStatus === "successfully" && (
         <div>
-          <div className="text-xl font-bold text-black">Successfully send the order!</div>
+          <div className="text-xl font-bold text-black">
+            Successfully send the order!
+          </div>
           <div
             className="py-1 px-6 rounded-2xl cursor-pointer border-2 border-brown-primary text-white bg-brown-primary ml-4 hover:opacity-70 float-right mt-4"
-            onClick={() => { props.setIsDisplayCartModal(false) }}>
+            onClick={() => {
+              props.setIsDisplayCartModal(false);
+            }}
+          >
             Close
           </div>
         </div>
+      )}
 
-      }
-      <div style={{
-        display: sendingOrderStatus === "not yet" ? "block" : "none"
-      }}>
-        {mealsInCart?.map(meal => {
-          return <MealItem key={meal.id} data={meal} />
+      <div
+        style={{
+          display: sendingOrderStatus === "not yet" ? "block" : "none",
+        }}
+      >
+        {mealsInCart?.map((meal) => {
+          return <MealItem key={meal.id} data={meal} />;
         })}
         <div className="flex justify-between items-center my-4">
-          <div className="font-bold text-xl">Total Amount</div >
-          <div className="font-bold text-xl">${totalAmount ? totalAmount.toFixed(2) : 0}</div >
+          <div className="font-bold text-xl">Total Amount</div>
+          <div className="font-bold text-xl">
+            ${totalAmount ? totalAmount.toFixed(2) : 0}
+          </div>
         </div>
-        {!isDisplayOrderForm &&
+        {!isDisplayOrderForm && (
           <div className="flex justify-end my-4">
             <div
               className="py-1 px-6 rounded-2xl cursor-pointer border-2 border-brown-primary text-brown-primary hover:text-white hover:bg-brown-primary"
-              onClick={() => { props.setIsDisplayCartModal(false) }}>
+              onClick={() => {
+                props.setIsDisplayCartModal(false);
+              }}
+            >
               Close
             </div>
-            {(totalAmount !== 0) &&
+            {totalAmount !== 0 && (
               <div
                 className="py-1 px-6 rounded-2xl cursor-pointer border-2 border-brown-primary text-white bg-brown-primary ml-4 hover:opacity-70"
-                onClick={() => { setIsDisplayOrderForm(true) }}>
+                onClick={() => {
+                  setIsDisplayOrderForm(true);
+                }}
+              >
                 Order
               </div>
-            }
+            )}
           </div>
-        }
-        {isDisplayOrderForm &&
+        )}
+        {isDisplayOrderForm && (
           <div>
             <Input
               isError={error.yourName}
               setError={setError}
               name="Your Name"
               value={orderFormInputs.yourName}
-              setOrderFormInputs={setOrderFormInputs} />
+              setOrderFormInputs={setOrderFormInputs}
+            />
             <Input
               isError={error.street}
               setError={setError}
               name="Street"
               value={orderFormInputs.street}
-              setOrderFormInputs={setOrderFormInputs} />
+              setOrderFormInputs={setOrderFormInputs}
+            />
             <Input
               isError={error.postalCode}
               setError={setError}
               name="Postal Code"
               value={orderFormInputs.postalCode}
-              setOrderFormInputs={setOrderFormInputs} />
+              setOrderFormInputs={setOrderFormInputs}
+            />
             <Input
               isError={error.city}
               setError={setError}
               name="City"
               value={orderFormInputs.city}
-              setOrderFormInputs={setOrderFormInputs} />
+              setOrderFormInputs={setOrderFormInputs}
+            />
           </div>
-        }
-        {isDisplayOrderForm &&
+        )}
+        {isDisplayOrderForm && (
           <div className="flex justify-end my-4 mt-8">
             <div
               className="py-1 px-6 rounded-2xl cursor-pointer border-2 border-brown-primary text-brown-primary hover:text-white hover:bg-brown-primary"
-              onClick={() => { setIsDisplayOrderForm(false) }}>
+              onClick={() => {
+                setIsDisplayOrderForm(false);
+              }}
+            >
               Cancel
             </div>
             <div
               className="py-1 px-6 rounded-2xl cursor-pointer border-2 border-brown-primary text-white bg-brown-primary ml-4 hover:opacity-70"
-              onClick={handleConfirm}>
+              onClick={handleConfirm}
+            >
               Confirm
             </div>
           </div>
-        }
-      </div >
+        )}
+      </div>
     </div>
-  )
+  );
 }
 
-
 function MealItem(props) {
-  const { changeCountMeal } = useContext(AppContext)
+  const { changeCountMeal } = useContext(AppContext);
   const { id, name, price, count } = props.data;
   return (
     <div className="flex justify-between items-center py-4 border-b-[3px] border-brown-primary">
       <div>
         <div className="font-bold text-xl mb-2">{name}</div>
         <div>
-          <div className="inline-block font-bold text-brown-primary w-24">${price}</div>
-          <div className="inline-block px-3 bg-gray-200 rounded-sm shadow-lg">x{count}</div>
+          <div className="inline-block font-bold text-brown-primary w-24">
+            ${price}
+          </div>
+          <div className="inline-block px-3 bg-gray-200 rounded-sm shadow-lg">
+            x{count}
+          </div>
         </div>
       </div>
       <div className="flex justify-end">
         <div
           className="flex justify-center px-4 rounded-md cursor-pointer border-2 border-brown-primary text-brown-primary hover:text-white hover:bg-brown-primary"
-          onClick={() => changeCountMeal(id, count - 1)}>
+          onClick={() => changeCountMeal(id, count - 1)}
+        >
           -
         </div>
         <div
           className="flex justify-center px-4 rounded-md cursor-pointer border-2 border-brown-primary text-brown-primary hover:text-white hover:bg-brown-primary ml-4"
-          onClick={() => changeCountMeal(id, count + 1)}>
+          onClick={() => changeCountMeal(id, count + 1)}
+        >
           +
         </div>
       </div>
     </div>
-  )
+  );
 }
-
 
 function Input(props) {
   const { name, value, isError } = props;
   const [errorMessage, setErrorMessage] = useState("");
 
-
   useEffect(() => {
-    if (isError)
-      setErrorMessage(`Please enter a valid ${name.toLowerCase()}`)
+    if (isError) setErrorMessage(`Please enter a valid ${name.toLowerCase()}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isError])
-
+  }, [isError]);
 
   function handleChange(e) {
     const value = e.target.value;
     const nameToKey = {
       "Your Name": "yourName",
-      "Street": "street",
+      Street: "street",
       "Postal Code": "postalCode",
-      "City": "city"
-    }
+      City: "city",
+    };
     setErrorMessage("");
     props.setError((prev) => {
       return {
         ...prev,
-        [nameToKey[name]]: false
-      }
-    })
-    props.setOrderFormInputs(prev => {
+        [nameToKey[name]]: false,
+      };
+    });
+    props.setOrderFormInputs((prev) => {
       return {
         ...prev,
-        [nameToKey[name]]: value
-      }
-    })
+        [nameToKey[name]]: value,
+      };
+    });
   }
-
 
   return (
     <label className="text-black mb-3 block">
       <div
         style={{
-          color: errorMessage === "" ? "black" : "red"
+          color: errorMessage === "" ? "black" : "red",
         }}
-        className="font-bold">
+        className="font-bold"
+      >
         {name}
-      </ div>
+      </div>
       <input
         style={{
-          borderColor: errorMessage === "" ? "black" : "red"
+          borderColor: errorMessage === "" ? "black" : "red",
         }}
         className="mt-1 block border py-[1px] border-black px-2 rounded w-72 max-w-[90%]"
         type="text"
         value={value}
-        onChange={handleChange} />
-      {errorMessage !== "" &&
-        <div className="text-red-500">
-          {errorMessage}
-        </div>
-      }
+        onChange={handleChange}
+      />
+      {errorMessage !== "" && (
+        <div className="text-red-500">{errorMessage}</div>
+      )}
     </label>
-
-  )
+  );
 }

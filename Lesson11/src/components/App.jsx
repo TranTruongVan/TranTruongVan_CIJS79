@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 import axios from "axios"
+import { useState } from 'react';
 
 export default function App() {
 
@@ -69,6 +70,6 @@ function FilmItem(props) {
           WebkitBoxOrient: "vertical"
         }}>{overview}</div>
       </div>
-    </div >
+    </div>
   )
 }
